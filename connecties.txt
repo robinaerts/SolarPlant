@@ -1,0 +1,26 @@
+------------------------
+ESP - Vochtigheidssensor
+------------------------
+
+	5V - VCC
+	GND - GND
+	GPIO34 - D_OUT
+
+
+------------------------
+ESP - Waterniveausensor
+------------------------
+
+	5V - VCC
+	GND - GND
+	GPIO35 - D_OUT
+
+
+------------------------
+ESP - Motordriver
+------------------------
+
+	GND - GND
+	GPIO14 - ENA
+	GPIO27 - IN1
+	GPIO26 - IN2
