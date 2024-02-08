@@ -1,3 +1,7 @@
+#include <WiFi.h>    
+#include <HTTPClient.h>
+#include <UrlEncode.h>
+
 int VOCHTIGHEIDSPIN = 34;  // Bodemvochtigheidssensor (analoge input GPIO34)
 int WATERNIVEAUPIN = 35;     // Waterniveausensor (analoge input GPIO35)
 
@@ -8,12 +12,19 @@ int MOTORACTIVATIE = 14;
 int vochtigheid = 0; 
 int waterniveau = 0; 
 
+// Netwerk setup (makkelijkst met hotspot)
+const char* ssid = "solarplant";
+const char* password = "solarplant";
+
+String phoneNumber = "+32468135658";
+String apiKey = "VERVANG_API_KEY"; // Instructies: https://www.callmebot.com/blog/free-api-whatsapp-messages/
 
 void setup() {
   pinMode(MOTORPIN1, OUTPUT);
   pinMode(MOTORPIN2, OUTPUT);
   pinMode(MOTORACTIVATIE, OUTPUT);
- Serial.begin(9600); 
+  WiFi.begin(ssid, password);
+  Serial.begin(9600); 
 } 
 
 void loop() { 
@@ -40,7 +51,7 @@ void test_waterniveau() {
   Serial.println(waterniveau); 
   if(waterniveau<50) // TODO experimenteren met waarden
   { 
-    stuur_melding()
+    stuur_melding("Het water is bijna op! Huidige waterniveau: " + waterniveau)
   }
 }
 
@@ -54,6 +65,24 @@ void motor_toe() {
   digitalWrite(MOTORPIN2, LOW); 
 }
 
-void stuur_melding() {
+void stuur_melding(bericht) {
+  // Data to send with HTTP POST
+  String url = "https://api.callmebot.com/whatsapp.php?phone=" + phoneNumber + "&apikey=" + apiKey + "&text=" + urlEncode(bericht);    
+  HTTPClient http;
+  http.begin(url);
 
+  // Specify content-type header
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  
+  // Send HTTP POST request
+  int httpResponseCode = http.POST(url);
+  if (httpResponseCode == 200){
+    Serial.print("Message sent successfully");
+  }
+  else{
+    Serial.println("Error sending the message");
+    Serial.print("HTTP response code: ");
+    Serial.println(httpResponseCode);
+  }
+  http.end();
 }
