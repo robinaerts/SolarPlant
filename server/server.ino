@@ -16,7 +16,7 @@ int waterniveau = 0;
 const char* ssid = "solarplant";
 const char* password = "solarplant";
 
-String phoneNumber = "+32468135658";
+String phoneNumber = "TELEFOON";
 String apiKey = "VERVANG_API_KEY"; // Instructies: https://www.callmebot.com/blog/free-api-whatsapp-messages/
 
 void setup() {
