@@ -65,7 +65,7 @@ void motor_toe() {
   digitalWrite(MOTORPIN2, LOW); 
 }
 
-void stuur_melding(bericht) {
+void stuur_melding(String bericht) {
   // Data to send with HTTP POST
   String url = "https://api.callmebot.com/whatsapp.php?phone=" + phoneNumber + "&apikey=" + apiKey + "&text=" + urlEncode(bericht);    
   HTTPClient http;
