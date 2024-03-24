@@ -10,14 +10,16 @@ int MOTORPIN2 = 26;
 int MOTORACTIVATIE = 14; 
 
 int vochtigheid = 0; 
-int waterniveau = 0; 
+int waterniveau = 0;
+
+int teller = 0;
 
 // Netwerk setup (makkelijkst met hotspot)
 const char* ssid = "solarplant";
 const char* password = "solarplant";
-
-String phoneNumber = "TELEFOON";
-String apiKey = "VERVANG_API_KEY"; // Instructies: https://www.callmebot.com/blog/free-api-whatsapp-messages/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+String phoneNumber = "TEL";
+String apiKey = "API"; // Instructies: https://www.callmebot.com/blog/free-api-whatsapp-messages/
 
 void setup() {
   pinMode(MOTORPIN1, OUTPUT);
@@ -30,28 +32,26 @@ void setup() {
 void loop() { 
   test_vochtigheid();
   test_waterniveau();
-  delay(1000); 
+  delay(5000);
 } 
 
 void test_vochtigheid() {
   vochtigheid = analogRead(VOCHTIGHEIDSPIN); 
   vochtigheid = vochtigheid/10; 
   Serial.println(vochtigheid); 
-  if(vochtigheid<50) // TODO nog experimenteren met waarden
+  if(vochtigheid<180) // TODO nog experimenteren met waarden
   { 
     motor_open();
-    delay(2000); // Aantal seconden dat het buisje open staat
+    delay(10000); // Aantal seconden dat het buisje open staat
     motor_toe();
+    teller = teller + 1;
   }
 }
 
 void test_waterniveau() {
-  waterniveau= analogRead(WATERNIVEAUPIN); 
-  waterniveau= waterniveau/10; 
-  Serial.println(waterniveau); 
-  if(waterniveau<50) // TODO experimenteren met waarden
-  { 
-    stuur_melding("Het water is bijna op! Huidige waterniveau: " + waterniveau)
+  if (teller > 1) {
+    stuur_melding("Het water is bijna op!");
+    teller = 0;
   }
 }
 
@@ -61,7 +61,7 @@ void motor_open() {
 }
 
 void motor_toe() {
-  digitalWrite(MOTORPIN1, HIGH);
+  digitalWrite(MOTORPIN1, LOW);
   digitalWrite(MOTORPIN2, LOW); 
 }
 
